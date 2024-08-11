@@ -117,16 +117,7 @@ async def execute(*args, cwd=None):
 
 
 def init_git():
-    # workaround for issue #1
     if not os.path.exists(os.path.join(PROJECT_DIRECTORY, ".git")):
-        execute(
-            "git",
-            "config",
-            "--system",
-            "init.defaultBranch",
-            "main",
-            cwd=PROJECT_DIRECTORY,
-        )
         execute("git", "init", cwd=PROJECT_DIRECTORY)
         execute(
             "git",
