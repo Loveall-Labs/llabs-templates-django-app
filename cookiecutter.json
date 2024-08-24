@@ -4,7 +4,6 @@
   "python_package_name": "llabs_{{ cookiecutter.project_slug.lower().replace(' ', '_').replace('-', '_') }}",
   "project_short_description": "Skeleton project",
   "version": "0.1.0",
-  "use_pytest": "y",
   "command_line_interface": ["No command-line interface", "Fire"],
   "_copy_without_render": ["docs/history.md", "docs/contributing.md", "docs/authors.md", "docs/index.md", ".github/workflows/*.yml", ".docstring.tpl"]
 }
