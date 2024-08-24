@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Tests for `{{ cookiecutter.project_slug }}` package."""
+"""Tests for `{{ cookiecutter.python_package_name }}` package."""
 # pylint: disable=redefined-outer-name
 
 {% if cookiecutter.use_pytest == 'y' -%}
@@ -36,7 +36,7 @@ def test_command_line_interface():
     runner = CliRunner()
     result = runner.invoke(cli.main)
     assert result.exit_code == 0
-    assert '{{ cookiecutter.project_slug }}.cli.main' in result.output
+    assert '{{ cookiecutter.python_package_name }}.cli.main' in result.output
     help_result = runner.invoke(cli.main, ['--help'])
     assert help_result.exit_code == 0
     assert '--help  Show this message and exit.' in help_result.output
@@ -44,8 +44,8 @@ def test_command_line_interface():
 {%- else %}
 
 
-class Test{{ cookiecutter.project_slug|title }}(unittest.TestCase):
-    """Tests for `{{ cookiecutter.project_slug }}` package."""
+class Test{{ cookiecutter.python_package_name|title }}(unittest.TestCase):
+    """Tests for `{{ cookiecutter.python_package_name }}` package."""
 
     def setUp(self):
         """Set up test fixtures, if any."""
@@ -62,7 +62,7 @@ class Test{{ cookiecutter.project_slug|title }}(unittest.TestCase):
         runner = CliRunner()
         result = runner.invoke(cli.main)
         assert result.exit_code == 0
-        assert '{{ cookiecutter.project_slug }}.cli.main' in result.output
+        assert '{{ cookiecutter.python_package_name }}.cli.main' in result.output
         help_result = runner.invoke(cli.main, ['--help'])
         assert help_result.exit_code == 0
         assert '--help  Show this message and exit.' in help_result.output

@@ -50,20 +50,15 @@
 
     The following appear in various parts of your generated project.
 
-    full_name
-    Your full name.
-
-    email
-    Your email address.
-
-    github_username
-    Your GitHub username.
-
     project_name
     The name of your new Python package project. This is used in
     documentation, so spaces and any characters are fine here.
 
     project_slug
+    The overall project name. This should be in Github-name-format standard
+    and will be the name of the repo.
+
+    python_package_name
     The namespace of your Python package. This should be Python
     import-friendly. Typically, it is the slugified version of
     project_name.
@@ -85,9 +80,6 @@
 
     install_precommit_hooks
     If you choose yes, then cookiecutter will install pre-commit hooks for you.
-
-    docstrings_style
-    one of `google, numpy, rst`. It's required by flake8-docstrings.
 
     ## Options
 

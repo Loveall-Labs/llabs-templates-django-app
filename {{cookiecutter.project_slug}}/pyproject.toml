@@ -7,21 +7,17 @@
 } -%}
 [tool]
 [tool.poetry]
-name = "{{ cookiecutter.project_slug }}"
+name = "{{ cookiecutter.python_package_name }}"
 version = "{{ cookiecutter.version }}"
-homepage = "https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}"
+homepage = "https://github.com/Loveall-Labs/{{ cookiecutter.project_slug }}"
 description = "{{ cookiecutter.project_short_description }}."
-authors = ["{{ cookiecutter.full_name.replace('\"', '\\\"') }} <{{ cookiecutter.email }}>"]
+authors = ["Loveall Labs LLC <engineering@lovealllabs.com>"]
 readme = "README.md"
-{%- if cookiecutter.open_source_license in license_classifiers %}
-license =  "{{ cookiecutter.open_source_license }}"
-{%- endif %}
+license =  "Proprietary"
 classifiers=[
     'Development Status :: 2 - Pre-Alpha',
     'Intended Audience :: Developers',
-{%- if cookiecutter.open_source_license in license_classifiers %}
-    '{{ license_classifiers[cookiecutter.open_source_license] }}',
-{%- endif %}
+    'License :: Other/Proprietary License',
     'Natural Language :: English',
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3.8',
@@ -30,7 +26,7 @@ classifiers=[
     'Programming Language :: Python :: 3.11',
 ]
 packages = [
-    { include = "{{ cookiecutter.project_slug }}" },
+    { include = "{{ cookiecutter.python_package_name }}" },
     { include = "tests", format = "sdist" },
 ]
 
@@ -70,10 +66,10 @@ test = [
     "pytest-cov"
     ]
 
-dev = ["tox", 
-    "pre-commit", 
-    "twine", 
-    "toml", 
+dev = ["tox",
+    "pre-commit",
+    "twine",
+    "toml",
     "black",
     "isort",
     "flake8",
@@ -96,7 +92,7 @@ doc = [
 
 {% if cookiecutter.command_line_interface|lower == 'fire' -%}
 [tool.poetry.scripts]
-{{ cookiecutter.project_slug }} = '{{ cookiecutter.project_slug }}.cli:main'
+{{ cookiecutter.python_package_name }} = '{{ cookiecutter.python_package_name }}.cli:main'
 {%- endif %}
 
 [build-system]

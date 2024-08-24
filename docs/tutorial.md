@@ -1,3 +1,4 @@
+[//]: <> (TODO: Rework this file.)
 
 ??? Note
     Did you find this article confusing? [Edit this file] and pull a request!
@@ -8,7 +9,7 @@ If you are new to Git and GitHub, you should probably spend a few minutes on som
 
 ## Step 1: Install Python Project Wizard (ppw)
 
-We'll need `ppw` to generate a skeleton project. Following the instructions to install `ppw` on to your machine. 
+We'll need `ppw` to generate a skeleton project. Following the instructions to install `ppw` on to your machine.
 
 ``` bash
 pip install ppw
@@ -103,9 +104,6 @@ configuration file of our project.
 You could choose your favorite python version here.
 ## Step 4: Install Dev Requirements
 
-!!!Important
-    Skip this step if you've answered 'yes' to the question `init_dev_env`. They're performed automatically if the answer is 'yes'.
-
 You should still be in the folder named as `%proejct_slug`, which containing the
  `pyproject.toml` file.
 
@@ -157,24 +155,17 @@ This will give you a test report and a lint report. You should see no errors exc
     ```
     # uncomment the following to create repo and push code to github
     # gh repo create {{cookiecutter.project_slug}} --public
-    # git remote add origin git@github.com:{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}.git
+    # git remote add origin git@github.com:Loveall-Labs/{{cookiecutter.project_slug}}.git
     # git add .
     # pre-commit run --all-files
     # git add .
     # git commit -m "Initial commit by ppw"
     # git branch -M main
 
-    # Uncomment the following to config github secret used by github workflow. 
+    # Uncomment the following to config github secret used by github workflow.
     # gh secret set PERSONAL_TOKEN --body $GH_TOKEN
     # gh secret set PYPI_API_TOKEN --body $PYPI_API_TOKEN
     # gh secret set TEST_PYPI_API_TOKEN --body $TEST_PYPI_API_TOKEN
-
-    # uncomment the following if you need to setup email notification
-    # gh secret set BUILD_NOTIFY_MAIL_SERVER --body $BUILD_NOTIFY_MAIL_SERVER
-    # gh secret set BUILD_NOTIFY_MAIL_PORT --body $BUILD_NOTIFY_MAIL_PORT
-    # gh secret set BUILD_NOTIFY_MAIL_FROM --body $BUILD_NOTIFY_MAIL_FROM
-    # gh secret set BUILD_NOTIFY_MAIL_PASSWORD --body $BUILD_NOTIFY_MAIL_PASSWORD
-    # gh secret set BUILD_NOTIFY_MAIL_RCPT --body $BUILD_NOTIFY_MAIL_RCPT
 
     # git push -u origin main
     ```
@@ -211,12 +202,6 @@ package name.
 
 You'll need a ssh key to push the repo. You could [Generate] a key or
 [Add] an existing one.
-
-???+ Warning
-
-    if you answered 'yes' to the question if `init_dev_env` at last step,
-    then you should find `pre-commit` was invoked when you run `git commit`, and some files
-     may be modified by hooks. If so, please add these files and **commit again**.
 
 ## Step 8: Setup codecov integration
 
@@ -261,7 +246,7 @@ then check your documentation at <https://{your_github_account}.github.io/{your_
   ```
   mkdocs serve -a 0.0.0.0:8000
   ```
-  
+
 then open your browser, visit your dev machine on port 8000.
 
 ???+ Info
@@ -277,7 +262,7 @@ then open your browser, visit your dev machine on port 8000.
 ## Step 11. Make an official release
 
 After done with your phased development, switch to either of (main, master) branch, following instructions at [release checklist](/pypi_release_checklist), trigger first official release and check result at [PYPI].
-  
+
 ## Step 12. Customization
 
 ppw assumed some settings for you, for example, it choose python version in pyproject.toml and tox.ini. Change accordingly to match you case.
@@ -333,7 +318,7 @@ The following section will address how to customize github workflow:
     ```
     # - name: Dingtalk Robot Notify
     #   uses: leafney/dingtalk-action@v1.0.0
-    #   env: 
+    #   env:
     #     DINGTALK_ACCESS_TOKEN: ${{ secrets.DINGTALK_ACCESS_TOKEN }}
     #     DINGTALK_SECRET: ${{ secrets.DINGTALK_SECRET }}
     #   with:

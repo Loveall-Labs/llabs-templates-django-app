@@ -119,20 +119,6 @@ async def execute(*args, cwd=None):
 def init_git():
     if not os.path.exists(os.path.join(PROJECT_DIRECTORY, ".git")):
         execute("git", "init", cwd=PROJECT_DIRECTORY)
-        execute(
-            "git",
-            "config",
-            "user.name",
-            "{{ cookiecutter.full_name }}",
-            cwd=PROJECT_DIRECTORY,
-        )
-        execute(
-            "git",
-            "config",
-            "user.email",
-            "{{ cookiecutter.email }}",
-            cwd=PROJECT_DIRECTORY,
-        )
 
 
 def init_dev():
@@ -189,24 +175,11 @@ def init_dev():
 if __name__ == "__main__":
     colorama.init()
 
-    if "{{ cookiecutter.create_author_file }}" != "y":
-        remove_file("AUTHORS.md")
-        remove_file("docs/authors.md")
-
     if "no" in "{{ cookiecutter.command_line_interface|lower }}":
-        cli_file = os.path.join("{{ cookiecutter.project_slug }}", "cli.py")
+        cli_file = os.path.join("{{ cookiecutter.python_package_name }}", "cli.py")
         remove_file(cli_file)
-
-    if "Not open source" == "{{ cookiecutter.open_source_license }}":
-        remove_file("LICENSE")
 
     try:
         init_git()
     except Exception as e:
         print(e)
-
-    if "{{ cookiecutter.init_dev_env }}" == "y":
-        try:
-            init_dev()
-        except Exception as e:
-            print(e)

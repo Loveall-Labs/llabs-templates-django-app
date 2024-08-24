@@ -51,8 +51,8 @@ extra:
   version:
     provider: mike
   social:
-    - icon: fontawesome/brands/github
-      link: https://zillionare.github.io/python-project-wizard
-      name: Github
+#    - icon: fontawesome/brands/github
+#      link: https://zillionare.github.io/python-project-wizard
+#      name: Github
     - icon: material/email
-      link: "mailto:code@jieyu.ai"
+      link: "mailto:engineering@lovealllabs.com"

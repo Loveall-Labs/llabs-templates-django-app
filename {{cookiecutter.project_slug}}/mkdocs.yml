@@ -1,6 +1,6 @@
 site_name: {{ cookiecutter.project_name }}
 # site_url: http://www.jieyu.ai
-repo_url: https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}
+repo_url: https://github.com/Loveall-Labs/{{ cookiecutter.project_slug }}
 repo_name: {{ cookiecutter.project_slug }}
 #strict: true
 nav:
@@ -9,8 +9,6 @@ nav:
   - usage: usage.md
   - modules: api.md
   - contributing: contributing.md
-  {% if cookiecutter.create_author_file == 'y' -%}  - authors: authors.md
-  {% endif -%}
   - history: history.md
 theme:
   name: material
@@ -66,21 +64,20 @@ extra:
     provider: mike
   social:
     - icon: fontawesome/brands/twitter
-      # replace with your own tweet link below
+      # TODO: replace with your own tweet link below
       link: http://www.jieyu.ai
       name: Tweet
     - icon: fontawesome/brands/facebook
-      # replace with your own facebook link below
+      # TODO: replace with your own facebook link below
       link: http://www.jieyu.ai
       name: Facebook
     - icon: fontawesome/brands/github
-      link: https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}
+      link: https://github.com/Loveall-Labs/{{ cookiecutter.project_slug }}
       name: Github
     - icon: material/email
-      link: "mailto:{{ cookiecutter.email }}"
-  # to enable disqus, uncomment the following and put your disqus id below
-  # disqus: disqus_id
-# uncomment the following and put your google tracking id below to enable GA
+      link: "mailto:engineering@lovealllabs.com"
+
+# TODO: uncomment the following and put your google tracking id below to enable GA
 #google_analytics:
   #- UA-xxx
   #- auto
