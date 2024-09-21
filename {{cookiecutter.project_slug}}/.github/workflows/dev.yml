@@ -70,10 +70,6 @@ jobs:
       - name: test with tox
         run: tox
 
-      - uses: codecov/codecov-action@v3
-        with:
-          fail_ci_if_error: true
-
   publish_dev_build:
     #TODO: Make publish to local PyPi server instead
     # if test failed, we should not publish
