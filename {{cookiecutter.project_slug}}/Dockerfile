@@ -9,5 +9,6 @@ RUN pip install tox tox-gh-actions poetry
 
 RUN poetry config virtualenvs.create false
 
+COPY README.md /code/
 COPY pyproject.toml /code/
 RUN poetry install
