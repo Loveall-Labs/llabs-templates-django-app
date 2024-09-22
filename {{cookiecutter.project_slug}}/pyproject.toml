@@ -27,7 +27,6 @@ classifiers=[
 ]
 packages = [
     { include = "{{ cookiecutter.python_package_name }}" },
-    { include = "tests", format = "sdist" },
 ]
 
 [tool.poetry.dependencies]
