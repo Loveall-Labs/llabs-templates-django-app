@@ -15,7 +15,11 @@ services:
             - DATABASE_PORT=5432
         restart: unless-stopped
         volumes:
-            - ./app/:/code/
+            - ./app/app/:/code/app/
+            - ./app/tests/:/code/tests/
+            - ./app/manage.py:/code/manage.py
+            - ./pyproject.toml:/code/pyproject.toml
+            - ./poetry.lock:/code/poetry.lock
             - ./{{cookiecutter.python_package_name}}/:/code/{{cookiecutter.python_package_name}}
 
     app:
