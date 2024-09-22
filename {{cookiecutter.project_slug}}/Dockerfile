@@ -11,4 +11,4 @@ RUN poetry config virtualenvs.create false
 
 COPY README.md /code/
 COPY pyproject.toml /code/
-RUN poetry install --with local_dev
+RUN poetry install --only local_dev
