@@ -7,7 +7,7 @@ WORKDIR /code
 RUN python -m pip install --upgrade pip
 RUN pip install tox tox-gh-actions poetry
 
-COPY requirements.txt /code/
-RUN pip install -r requirements.txt
+RUN poetry config virtualenvs.create false
 
-COPY ./{{cookiecutter.python_package_name}}/ /code/{{cookiecutter.python_package_name}}/
+COPY pyproject.toml /code/
+RUN poetry install
