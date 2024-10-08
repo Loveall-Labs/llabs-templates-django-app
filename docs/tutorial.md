@@ -22,7 +22,7 @@ It's best practice that always developing your project in dedicated python virtu
 You may choose either annaconda or virtualenv， annaconda (actually miniconda) is preferred though.
 
 ```
-conda create -n mypackage python=3.8
+conda create -n mypackage python=3.9
 conda activate mypackage
 conda install -c conda-forge tox-conda
 ```
@@ -261,7 +261,7 @@ The following section will address how to customize github workflow:
         # The type of runner that the job will run on
         strategy:
         matrix:
-            python-versions: ['3.8',' 3.9', '3.10', '3.11']
+            python-versions: [' 3.9', '3.10', '3.11', '3.12', '3.13]
             # github action doesn't goes well with windows due to docker support
             # github action doesn't goes well with macos due to `no docker command`
             #os: [ubuntu-20.04, windows-latest, macos-latest]

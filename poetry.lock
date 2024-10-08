@@ -699,7 +699,7 @@ version = "1.5.1"
 description = "Optional static typing for Python"
 category = "main"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 files = [
     {file = "mypy-1.5.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:f33592ddf9655a4894aef22d134de7393e95fcbdc2d15c1ab65828eee5c66c70"},
     {file = "mypy-1.5.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:258b22210a4a258ccd077426c7a181d789d1121aca6db73a83f79372f5569ae0"},
@@ -1515,5 +1515,5 @@ dev = ["fire", "livereload", "mike", "mkdocs", "mkdocs-include-markdown-plugin",
 
 [metadata]
 lock-version = "2.0"
-python-versions = ">=3.8,<4.0"
+python-versions = ">=3.9,<4.0"
 content-hash = "ea2a50659f0a559c52f7162f1cf46e6ae47fd9169481e711f03cec9c3ea11a65"
