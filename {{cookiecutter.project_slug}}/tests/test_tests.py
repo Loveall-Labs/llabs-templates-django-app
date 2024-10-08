@@ -1,2 +1,2 @@
-def canary_test():
+def test_canary():
     assert True
