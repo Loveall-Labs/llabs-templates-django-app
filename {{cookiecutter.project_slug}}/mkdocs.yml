@@ -57,7 +57,7 @@ plugins:
   - search:
       lang: en
 watch:
-- {{ cookiecutter.project_slug }}
+- {{ cookiecutter.python_package_name }}
 extra:
   version:
     provider: mike
