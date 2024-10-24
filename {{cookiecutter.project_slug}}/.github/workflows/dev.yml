@@ -71,7 +71,6 @@ jobs:
         run: tox
 
   publish_dev_build:
-    #TODO: Make publish to local PyPi server instead
     # if test failed, we should not publish
     needs: test
     # you may need to change os below
@@ -81,6 +80,14 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::255793234685:role/pip_publisher_role
+          role-session-name: RepoPublishPackage
+          role-duration-seconds: 900
 
       - name: Install dependencies
         run: |
@@ -103,12 +110,11 @@ jobs:
           poetry build
 
       - name: publish to Test PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.TEST_PYPI_API_TOKEN}}
-          repository_url: https://test.pypi.org/legacy/
-          skip_existing: true
+        run: |
+            export POETRY_REPOSITORIES_PUBLISH_URL=$(aws codeartifact get-repository-endpoint --domain-owner 255793234685 --domain loveall-labs --repository primary --format pypi --query 'repositoryEndpoint' --output text) &&
+            export POETRY_HTTP_BASIC_PUBLISH_USERNAME=aws &&
+            export POETRY_HTTP_BASIC_PUBLISH_PASSWORD=$(aws codeartifact get-authorization-token --domain-owner 255793234685 --domain loveall-labs --query 'authorizationToken' --output text) &&
+            poetry publish --no-interaction
 
   notification:
     needs: [test,publish_dev_build]
