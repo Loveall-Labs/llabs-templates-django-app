@@ -73,6 +73,9 @@ jobs:
   publish_dev_build:
     # if test failed, we should not publish
     needs: test
+    permissions:
+      id-token: write
+      contents: read
     # you may need to change os below
     runs-on: ubuntu-latest
     steps:
@@ -115,6 +118,7 @@ jobs:
             export POETRY_HTTP_BASIC_PUBLISH_USERNAME=aws &&
             export POETRY_HTTP_BASIC_PUBLISH_PASSWORD=$(aws codeartifact get-authorization-token --domain-owner 255793234685 --domain loveall-labs --query 'authorizationToken' --output text) &&
             poetry publish --no-interaction
+
 
   notification:
     needs: [test,publish_dev_build]
