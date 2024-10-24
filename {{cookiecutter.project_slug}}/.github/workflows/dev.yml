@@ -75,7 +75,7 @@ jobs:
     needs: test
     permissions:
       id-token: write
-      contents: read
+      contents: write
     # you may need to change os below
     runs-on: ubuntu-latest
     steps:
