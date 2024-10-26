@@ -3,7 +3,7 @@ version: '3'
 services:
     common_services_definition: &common
         build:
-            dockerfile: docker_compose_files/example_app/
+            dockerfile: docker_compose_files/example_app/Dockerfile
             context: .
         volumes:
             - ./{{cookiecutter.python_package_name}}/:/code/{{cookiecutter.python_package_name}}/
