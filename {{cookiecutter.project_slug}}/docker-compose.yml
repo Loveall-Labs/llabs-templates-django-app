@@ -2,7 +2,7 @@ version: '3'
 
 services:
     common_services_definition: &common
-        build: .
+        build: docker_compose_files/example_app/
         volumes:
             - ./{{cookiecutter.python_package_name}}/:/code/{{cookiecutter.python_package_name}}/
             - ./example_app/:/code/example_app/
