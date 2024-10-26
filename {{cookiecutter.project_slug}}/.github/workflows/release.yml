@@ -18,9 +18,10 @@ jobs:
   release:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        python-versions: ['3.9']
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: read
 
     # map step outputs to job outputs so they can be share among jobs
     outputs:
@@ -31,15 +32,26 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      #TODO: Make publish to local PyPi server instead
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
 
       - name: build change log
         id: build_changelog
         uses: mikepenz/release-changelog-builder-action@v3.2.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::255793234685:role/pip_publisher_role
+          role-session-name: RepoPublishPackage
+          role-duration-seconds: 900
 
       - uses: actions/setup-python@v4
         with:
@@ -63,11 +75,12 @@ jobs:
       - name: publish documentation
         run: |
           poetry install -E doc
-          mkdocs build
+          poetry run mkdocs build
           git config --global user.name Docs deploy
           git config --global user.email docs@dummy.bot.com
-          mike deploy -p -f --ignore `poetry version --short` latest
-          mike set-default -p `poetry version --short`
+          git fetch origin gh-pages:gh-pages
+          poetry run mike deploy -p --ignore `poetry version --short` latest
+          poetry run mike set-default -p `poetry version --short`
 
       - name: Build wheels and source tarball
         run: |
@@ -86,17 +99,10 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: publish to PYPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
-          skip_existing: true
-
-  notification:
-    needs: release
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-      - uses: martialonline/workflow-status@v2
-        id: check
+      - name: publish to Test PyPI
+        run: |
+            POETRY_REPOSITORIES_CODEARTIFACT_URL=$(aws codeartifact get-repository-endpoint --domain-owner 255793234685 --domain loveall-labs --repository primary --format pypi --query 'repositoryEndpoint' --output text)
+            POETRY_HTTP_BASIC_CODEARTIFACT_USERNAME=aws
+            POETRY_HTTP_BASIC_CODEARTIFACT_PASSWORD=$(aws codeartifact get-authorization-token --domain loveall-labs --domain-owner 255793234685 --region us-east-1 --query authorizationToken --output text)
+            poetry config http-basic.codeartifact $POETRY_HTTP_BASIC_CODEARTIFACT_USERNAME $POETRY_HTTP_BASIC_CODEARTIFACT_PASSWORD
+            poetry publish --no-interaction --repository codeartifact

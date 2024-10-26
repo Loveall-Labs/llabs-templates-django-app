@@ -18,7 +18,6 @@ This tool will create Python project with the following features:
 * [Poetry]: Manage version, dependancy, build and release
 * [Mkdocs]: Writting your docs in markdown style
 * Testing with [Pytest] (unittest is still supported out of the box)
-* Code coverage report and endorsed by [Codecov]
 * [Tox]: Test your code against environment matrix, lint and artifact check.
 * Format with [Black] and [Isort]
 * Lint code with [Flake8] and [Flake8-docstrings]
@@ -57,7 +56,6 @@ This repo is forked from [audreyr/cookiecutter-pypackage], and borrowed some ide
 [poetry]: https://python-poetry.org/
 [mkdocs]: https://www.mkdocs.org
 [pytest]: https://pytest.org
-[codecov]: https://codecov.io
 [tox]: https://tox.readthedocs.io
 [black]: https://github.com/psf/black
 [isort]: https://github.com/PyCQA/isort

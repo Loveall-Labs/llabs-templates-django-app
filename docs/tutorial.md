@@ -3,7 +3,7 @@
 ??? Note
     Did you find this article confusing? [Edit this file] and pull a request!
 
-To start with, you will need [GitHub], [Pypi] , [TestPyPi] and [Codecov] account. If you don't have one, please follow the links to apply one before getting started on this tutorial.
+To start with, you will need [GitHub], [Pypi], and [TestPyPi] account. If you don't have one, please follow the links to apply one before getting started on this tutorial.
 
 If you are new to Git and GitHub, you should probably spend a few minutes on some of the tutorials at [GitHub Help]
 
@@ -22,7 +22,7 @@ It's best practice that always developing your project in dedicated python virtu
 You may choose either annaconda or virtualenv， annaconda (actually miniconda) is preferred though.
 
 ```
-conda create -n mypackage python=3.8
+conda create -n mypackage python=3.9
 conda activate mypackage
 conda install -c conda-forge tox-conda
 ```
@@ -203,20 +203,6 @@ package name.
 You'll need a ssh key to push the repo. You could [Generate] a key or
 [Add] an existing one.
 
-## Step 8: Setup codecov integration
-
-???+ Tips
-
-    If you have already setup codecov integration and configured access for all your
-    repositories, you can skip this step.
-
-In your browser, visit [install codecov app], you'll be landed at this page:
-
-![](http://images.jieyu.ai/images/202104/20210419175222.png)
-
-Click on the green `install` button at top right, choose `all repositories` then click
-on `install` button, following directions until all sets.
-
 ## Step 9: Check the CI result
 
 After pushing your code to github, go to github web page, navigate to your repo, then
@@ -275,7 +261,7 @@ The following section will address how to customize github workflow:
         # The type of runner that the job will run on
         strategy:
         matrix:
-            python-versions: ['3.8',' 3.9', '3.10', '3.11']
+            python-versions: ['3.9', '3.10', '3.11', '3.12']
             # github action doesn't goes well with windows due to docker support
             # github action doesn't goes well with macos due to `no docker command`
             #os: [ubuntu-20.04, windows-latest, macos-latest]
@@ -335,7 +321,6 @@ The following section will address how to customize github workflow:
     ```
 
 [Edit this file]: https://github.com/zillionare/cookiecutter-pypackage/blob/master/docs/tutorial.md
-[Codecov]: https://codecov.io/
 [PYPI]: https://pypi.org
 [GitHub]: https://github.com/
 [TestPyPI]: https://test.pypi.org/
@@ -345,4 +330,3 @@ The following section will address how to customize github workflow:
 [How to apply testpypi token]: https://test.pypi.org/manage/account/
 [How to apply pypi token]: https://pypi.org/manage/account/
 [How to apply personal token]: https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token
-[install codecov app]: https://github.com/apps/codecov

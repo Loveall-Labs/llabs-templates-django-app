@@ -18,7 +18,7 @@ jobs:
     # The type of runner that the job will run on
     strategy:
       matrix:
-        python-versions: ['3.8', '3.9', '3.10', '3.11']
+        python-versions: ['3.9', '3.10', '3.11', '3.12']
         # github action doesn't goes well with windows due to docker support
         # github action doesn't goes well with macos due to `no docker command`
         #os: [ubuntu-latest, windows-latest, macos-latest]
@@ -71,16 +71,27 @@ jobs:
         run: tox
 
   publish_dev_build:
-    #TODO: Make publish to local PyPi server instead
     # if test failed, we should not publish
     needs: test
+    permissions:
+      id-token: write
+      contents: write
     # you may need to change os below
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::255793234685:role/pip_publisher_role
+          role-session-name: RepoPublishPackage
+          role-duration-seconds: 900
 
       - name: Install dependencies
         run: |
@@ -90,11 +101,11 @@ jobs:
       - name: build documentation
         run: |
           poetry install -E doc
-          mkdocs build
+          poetry run mkdocs build
           git config --global user.name Docs deploy
           git config --global user.email docs@dummy.bot.com
-          mike deploy -p -f --ignore "`poetry version --short`.dev"
-          mike set-default -p "`poetry version --short`.dev"
+          poetry run mike deploy --ignore "`poetry version --short`.dev"
+          poetry run mike set-default "`poetry version --short`.dev"
 
       - name: Build wheels and source tarball
         run: |
@@ -103,17 +114,9 @@ jobs:
           poetry build
 
       - name: publish to Test PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.TEST_PYPI_API_TOKEN}}
-          repository_url: https://test.pypi.org/legacy/
-          skip_existing: true
-
-  notification:
-    needs: [test,publish_dev_build]
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-      - uses: martialonline/workflow-status@v2
-        id: check
+        run: |
+            POETRY_REPOSITORIES_CODEARTIFACT_URL=$(aws codeartifact get-repository-endpoint --domain-owner 255793234685 --domain loveall-labs --repository primary --format pypi --query 'repositoryEndpoint' --output text)
+            POETRY_HTTP_BASIC_CODEARTIFACT_USERNAME=aws
+            POETRY_HTTP_BASIC_CODEARTIFACT_PASSWORD=$(aws codeartifact get-authorization-token --domain loveall-labs --domain-owner 255793234685 --region us-east-1 --query authorizationToken --output text)
+            poetry config http-basic.codeartifact $POETRY_HTTP_BASIC_CODEARTIFACT_USERNAME $POETRY_HTTP_BASIC_CODEARTIFACT_PASSWORD
+            poetry publish --no-interaction --repository codeartifact
