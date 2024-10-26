@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+    common_services_definition: &common
+        build: .
+        volumes:
+            - ./{{cookiecutter.python_package_name}}/:/code/{{cookiecutter.python_package_name}}/
+            - ./example_app/:/code/example_app/
+        working_dir: /code/example_app/
+
+    app:
+        <<: *common
+        command: python manage.py runserver 0.0.0.0:8000
+
+    test:
+        <<: *common
+        command: python manage.py test
