@@ -95,6 +95,13 @@ doc = [
 
 [tool.poetry.group.local_dev.dependencies]
 
+# Specify the CodeArtifact repository for publishing
+[[tool.poetry.source]]
+name = "codeartifact"
+url = "https://loveall-labs-255793234685.d.codeartifact.us-east-1.amazonaws.com/pypi/primary/"
+priority = "supplemental"
+
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"

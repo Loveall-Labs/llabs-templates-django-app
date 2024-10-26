@@ -31,7 +31,6 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      #TODO: Make publish to local PyPi server instead
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
@@ -86,12 +85,13 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: publish to PYPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
-          skip_existing: true
+      - name: publish to Test PyPI
+        run: |
+            POETRY_REPOSITORIES_CODEARTIFACT_URL=$(aws codeartifact get-repository-endpoint --domain-owner 255793234685 --domain loveall-labs --repository primary --format pypi --query 'repositoryEndpoint' --output text)
+            POETRY_HTTP_BASIC_CODEARTIFACT_USERNAME=aws
+            POETRY_HTTP_BASIC_CODEARTIFACT_PASSWORD=$(aws codeartifact get-authorization-token --domain loveall-labs --domain-owner 255793234685 --region us-east-1 --query authorizationToken --output text)
+            poetry config http-basic.codeartifact $POETRY_HTTP_BASIC_CODEARTIFACT_USERNAME $POETRY_HTTP_BASIC_CODEARTIFACT_PASSWORD
+            poetry publish --no-interaction --repository codeartifact
 
   notification:
     needs: release

@@ -80,6 +80,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
@@ -103,8 +104,8 @@ jobs:
           poetry run mkdocs build
           git config --global user.name Docs deploy
           git config --global user.email docs@dummy.bot.com
-          poetry run mike deploy -p --ignore "`poetry version --short`.dev"
-          poetry run mike set-default -p "`poetry version --short`.dev"
+          poetry run mike deploy --ignore "`poetry version --short`.dev"
+          poetry run mike set-default "`poetry version --short`.dev"
 
       - name: Build wheels and source tarball
         run: |
@@ -114,10 +115,11 @@ jobs:
 
       - name: publish to Test PyPI
         run: |
-            export POETRY_REPOSITORIES_PUBLISH_URL=$(aws codeartifact get-repository-endpoint --domain-owner 255793234685 --domain loveall-labs --repository primary --format pypi --query 'repositoryEndpoint' --output text) &&
-            export POETRY_HTTP_BASIC_PUBLISH_USERNAME=aws &&
-            export POETRY_HTTP_BASIC_PUBLISH_PASSWORD=$(aws codeartifact get-authorization-token --domain-owner 255793234685 --domain loveall-labs --query 'authorizationToken' --output text) &&
-            poetry publish --no-interaction
+            POETRY_REPOSITORIES_CODEARTIFACT_URL=$(aws codeartifact get-repository-endpoint --domain-owner 255793234685 --domain loveall-labs --repository primary --format pypi --query 'repositoryEndpoint' --output text)
+            POETRY_HTTP_BASIC_CODEARTIFACT_USERNAME=aws
+            POETRY_HTTP_BASIC_CODEARTIFACT_PASSWORD=$(aws codeartifact get-authorization-token --domain loveall-labs --domain-owner 255793234685 --region us-east-1 --query authorizationToken --output text)
+            poetry config http-basic.codeartifact $POETRY_HTTP_BASIC_CODEARTIFACT_USERNAME $POETRY_HTTP_BASIC_CODEARTIFACT_PASSWORD
+            poetry publish --no-interaction --repository codeartifact
 
 
   notification:
