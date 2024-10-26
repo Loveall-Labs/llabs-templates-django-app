@@ -30,7 +30,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.9,<4.0"
+python = ">=3.10,<4.0"
 # PUT LIBRARY-REQUIRED DEPENDENCIES HERE
 
 {%- if cookiecutter.command_line_interface|lower == 'fire' %}
@@ -94,9 +94,6 @@ doc = [
 [tool.poetry.scripts]
 {{ cookiecutter.python_package_name }} = '{{ cookiecutter.python_package_name }}.cli:main'
 {%- endif %}
-
-[tool.poetry.workspace]
-members = ["{{ cookiecutter.python_package_name }}", "example_app"]
 
 [tool.poetry.group.example_app.dependencies]
 django = "^5.1"
