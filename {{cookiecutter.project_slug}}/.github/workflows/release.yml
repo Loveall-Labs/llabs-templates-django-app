@@ -23,10 +23,6 @@ jobs:
       contents: write
       pull-requests: read
 
-    strategy:
-      matrix:
-        python-versions: ['3.9']
-
     # map step outputs to job outputs so they can be share among jobs
     outputs:
       package_version: ${{ steps.variables_step.outputs.package_version }}
@@ -38,6 +34,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
 
       - name: build change log
         id: build_changelog
