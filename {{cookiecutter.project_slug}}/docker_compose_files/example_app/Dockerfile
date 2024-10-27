@@ -3,10 +3,11 @@ FROM python:3.11-slim-buster
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    POETRY_VIRTUALENVS_CREATE=false \
-    PATH="/root/.local/bin:/app/.venv/bin:$PATH"
+    POETRY_VIRTUALENVS_CREATE=true \
+    POETRY_VIRTUALENVS_IN_PROJECT=true \
+    PATH="/root/.local/bin:$PATH"
 
-WORKDIR /code/example_app
+WORKDIR /code
 
 # Install Poetry
 RUN apt-get update \
@@ -15,9 +16,17 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install example app dependencies
-COPY pyproject.toml poetry.lock /code/
-RUN poetry install --no-interaction --no-ansi --with example_app
+# Install library & dependencies
+COPY pyproject.toml poetry.lock README.md /code/
+COPY {{cookiecutter.python_package_name}}/* /code/{{cookiecutter.python_package_name}}/
+RUN poetry install --no-interaction --no-ansi
 
-# Install example_app and library as editable apps (so we don't have to re-install them every time we edit a file.
-RUN poetry add --editable /code/example_app --editable /code/{{cookiecutter.python_package_name}}
+# Install example app & dependencies
+COPY example_app /code/example_app
+RUN poetry add --editable /code/example_app
+
+# Set this path to within the example app to make manage.py make sense.
+WORKDIR /code/example_app/example_app/
+
+# Use entrypoint to activcate Poetry venv (that poetry installed everything to above) before executing other things
+ENTRYPOINT ["/bin/bash", "-c", "source /code/.venv/bin/activate && exec \"$@\"", "--"]

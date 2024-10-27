@@ -1,0 +1,12 @@
+[tool.poetry]
+name = "example_app"
+version = "0.1.0"
+description = "Example Django application for development purposes"
+authors = ["Loveall Labs LLC <engineering@lovealllabs.com>"]
+
+
+[tool.poetry.dependencies]
+python = ">=3.10,<4.0"
+# PUT app-REQUIRED DEPENDENCIES HERE
+django = "~=5.1"
+psycopg = { version = "~=3.2", extras = ["binary", "pool"] }

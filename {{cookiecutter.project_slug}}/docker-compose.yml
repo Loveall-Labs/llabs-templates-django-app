@@ -8,12 +8,30 @@ services:
         volumes:
             - ./{{cookiecutter.python_package_name}}/:/code/{{cookiecutter.python_package_name}}/
             - ./example_app/:/code/example_app/
-        working_dir: /code/example_app/
+        working_dir: /code/example_app/example_app/
+        depends_on:
+            -   postgres
 
     app:
         <<: *common
         command: python manage.py runserver 0.0.0.0:8000
+        ports:
+            -   8000:8000
 
     test:
         <<: *common
         command: python manage.py test
+
+    postgres:
+        image: postgres:16-alpine
+        ports:
+            - 5432:5432
+        volumes:
+            - psql_data:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_USER=postgres
+            - POSTGRES_DB=postgres
+
+volumes:
+    psql_data:

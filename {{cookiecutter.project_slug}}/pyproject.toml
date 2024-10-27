@@ -32,11 +32,13 @@ packages = [
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
 # PUT LIBRARY-REQUIRED DEPENDENCIES HERE
+django = "~=5.1"
 
 {%- if cookiecutter.command_line_interface|lower == 'fire' %}
 fire = "0.4.0"
 {%- endif %}
 
+# Pin dev dep versions
 black  = { version = "^24.8.0", optional = true}
 isort  = { version = "5.13.2", optional = true}
 flake8  = { version = "7.1.1", optional = true}
@@ -94,11 +96,6 @@ doc = [
 [tool.poetry.scripts]
 {{ cookiecutter.python_package_name }} = '{{ cookiecutter.python_package_name }}.cli:main'
 {%- endif %}
-
-[tool.poetry.group.example_app.dependencies]
-django = "^5.1"
-# PUT EXAMPLE_APP-REQUIRED DEPENDENCIES HERE
-
 
 # Specify the CodeArtifact repository for publishing
 [[tool.poetry.source]]
