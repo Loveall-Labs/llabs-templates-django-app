@@ -1,0 +1,201 @@
+{% extends 'accounting/blank_base.html' %}
+{% load static %}
+
+{% block base_body %}
+    <main class="flex-shrink-0 mb-5">
+        <nav class="navbar navbar-expand-xl navbar-light bg-primary">
+            <div class="container-fluid">
+                <a class="navbar-brand d-flex align-items-center" href="/">
+                    <img src="{% static 'images/placeholder.jpeg' %}" alt="" width="50">
+                    <span class="h1" style="margin-bottom: -0.15em;">Loveall Labs Accounting</span>
+                </a>
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarTogglerDemo02"
+                        aria-controls="navbarTogglerDemo02"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                    </ul>
+                    <ul class="navbar-nav nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle"
+                               href="#"
+                               id="myAccountDropdown"
+                               role="button"
+                               data-bs-toggle="dropdown"
+                               aria-expanded="false">
+                                My Account
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="myAccountDropdown">
+                                {% if user.is_anonymous %}
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'register' %}">
+                                            Register
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'logout' %}">
+                                            Sign In
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    {#                                    <li>#}
+                                    {#                                        <a class="dropdown-item" href="{% url 'my_account' %}">#}
+                                    {#                                            My Account#}
+                                    {#                                        </a>#}
+                                    {#                                    </li>#}
+                                    <li>
+                                        <a class="dropdown-item bg-danger text-light" href="{% url 'logout' %}">
+                                            Sign Out
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        {% for message in messages %}
+            {% if forloop.first %}
+                <div class="container mt-5">
+                <div class="row">
+                <div class="col-12">
+            {% endif %}
+        <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+            {{ message }}
+        </div>
+        {% if forloop.last %}
+            </div>
+            </div>
+            </div>
+        {% endif %}
+        {% endfor %}
+
+        {% block body %}
+            <h1>Heading 1</h1>
+            <h2>Heading 2</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore
+                magna aliqua. Ullamcorper sit amet risus nullam. Morbi blandit cursus risus at ultrices mi tempus
+                imperdiet
+                nulla. Eu volutpat odio facilisis mauris sit amet. Ut porttitor leo a diam sollicitudin tempor id. Sed
+                id
+                semper risus in hendrerit gravida rutrum quisque non. Sagittis eu volutpat odio facilisis mauris sit. A
+                scelerisque purus semper eget duis at tellus at urna. Dignissim cras tincidunt lobortis feugiat vivamus
+                at.
+                Leo urna molestie at elementum eu facilisis sed odio morbi. Metus aliquam eleifend mi in nulla. Lorem
+                ipsum
+                dolor sit amet consectetur adipiscing elit. In eu mi bibendum neque egestas congue. Iaculis eu non diam
+                phasellus vestibulum. Etiam erat velit scelerisque in dictum non consectetur a erat. Mi in nulla posuere
+                sollicitudin aliquam ultrices sagittis orci a. In arcu cursus euismod quis viverra nibh cras. Posuere
+                lorem
+                ipsum dolor sit amet consectetur adipiscing.</p>
+
+            <p> Eu scelerisque felis imperdiet proin fermentum leo vel orci porta. Bibendum ut tristique et egestas quis
+                ipsum suspendisse ultrices gravida. Urna condimentum mattis pellentesque id nibh. Neque laoreet
+                suspendisse
+                interdum consectetur libero id faucibus. Cursus risus at ultrices mi tempus imperdiet nulla malesuada
+                pellentesque. Ornare lectus sit amet est placerat in egestas erat imperdiet. Id diam vel quam elementum.
+                Fermentum iaculis eu non diam phasellus vestibulum. Morbi non arcu risus quis. Amet commodo nulla
+                facilisi
+                nullam vehicula. Lobortis mattis aliquam faucibus purus in massa tempor nec. Arcu odio ut sem nulla
+                pharetra
+                diam. Facilisis gravida neque convallis a cras semper. Id cursus metus aliquam eleifend mi in nulla
+                posuere
+                sollicitudin.</p>
+
+            <p>Molestie nunc non blandit massa enim nec dui nunc mattis. Duis ut diam quam nulla porttitor massa id
+                neque
+                aliquam. Elementum nisi quis eleifend quam. Cras fermentum odio eu feugiat pretium nibh ipsum consequat
+                nisl.
+                Dignissim diam quis enim lobortis scelerisque fermentum dui faucibus. Eget magna fermentum iaculis eu
+                non
+                diam phasellus vestibulum. Mattis vulputate enim nulla aliquet porttitor lacus luctus accumsan. Justo
+                nec
+                ultrices dui sapien eget mi. Nibh praesent tristique magna sit amet purus. Lectus quam id leo in vitae
+                turpis
+                massa. Pulvinar neque laoreet suspendisse interdum consectetur libero id faucibus nisl. Vitae justo eget
+                magna fermentum iaculis eu non diam phasellus. Pretium nibh ipsum consequat nisl vel pretium. Eu augue
+                ut
+                lectus arcu bibendum at varius vel. Lacus vestibulum sed arcu non. Mattis pellentesque id nibh tortor id
+                aliquet lectus proin.</p>
+
+            <p>Quis eleifend quam adipiscing vitae proin sagittis. Dictum at tempor commodo ullamcorper a lacus
+                vestibulum.
+                Vel orci porta non pulvinar. Eget arcu dictum varius duis at consectetur lorem donec massa. Convallis
+                tellus
+                id interdum velit laoreet id. Sem integer vitae justo eget magna fermentum iaculis. Ut lectus arcu
+                bibendum
+                at. In arcu cursus euismod quis viverra. Orci dapibus ultrices in iaculis nunc sed. Adipiscing vitae
+                proin
+                sagittis nisl rhoncus mattis. Maecenas volutpat blandit aliquam etiam erat velit scelerisque in. Et
+                ligula
+                ullamcorper malesuada proin libero nunc.</p>
+
+            <p>Turpis cursus in hac habitasse platea dictumst quisque sagittis. Cras fermentum odio eu feugiat pretium
+                nibh
+                ipsum consequat nisl. Cursus mattis molestie a iaculis at. Est ullamcorper eget nulla facilisi etiam
+                dignissim diam quis enim. Penatibus et magnis dis parturient montes. Cursus euismod quis viverra nibh
+                cras
+                pulvinar. Turpis egestas pretium aenean pharetra magna. Amet purus gravida quis blandit turpis. Id
+                venenatis
+                a condimentum vitae. Tincidunt lobortis feugiat vivamus at. Maecenas pharetra convallis posuere morbi
+                leo
+                urna molestie at. Laoreet suspendisse interdum consectetur libero id faucibus nisl tincidunt. In nulla
+                posuere sollicitudin aliquam. Pharetra convallis posuere morbi leo urna molestie at elementum. Maecenas
+                sed
+                enim ut sem viverra. Phasellus vestibulum lorem sed risus ultricies tristique nulla aliquet. Malesuada
+                fames
+                ac turpis egestas sed tempus. Adipiscing tristique risus nec feugiat in fermentum.</p>
+        {% endblock %}
+    </main>
+
+    <footer class="footer mt-auto py-3 bg-secondary">
+        <div class="container">
+            <div class="row">
+                <div class="col-12"><h2>Loveall Labs Accounting</h2></div>
+            </div>
+            <div class="row">
+                <div class="col-xl-3 col-sm-6">
+                    <p><a href="mailto:CONTACT_EMAIL">CONTACT_EMAIL</a></p>
+                    <p><a href="tel:+11234567890">(123) 456 - 7890</a></p>
+                    <p>123 Main St<br/>
+                        Suite 456<br/>
+                        Austin, TX 78701</p>
+                </div>
+                <div class="col-xl-3 col-sm-6">
+                    <p>
+                        <a href="#">Footer Link 1</a><br/>
+                        <a href="#">Footer Link 2</a><br/>
+                    </p>
+                    <p><a href="#">Footer Link 3</a></p>
+                    <p><a href="#">Footer Link 4</a></p>
+                </div>
+                <div class="col-xl-6">
+                    <h3>Footer Header</h3>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="#">Footer Link 1</a><br/>
+                            <a href="#">Footer Link 2</a><br/>
+                            <a href="#">Footer Link 3</a>
+                        </div>
+                        <div class="col-sm-6">
+                            <a href="#">Footer Link 4</a><br/>
+                            <a href="#">Footer Link 5</a><br/>
+                            <a href="#">Footer Link 6</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+{% endblock %}
