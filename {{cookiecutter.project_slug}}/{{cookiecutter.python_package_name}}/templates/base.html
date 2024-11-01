@@ -1,14 +1,14 @@
 {% raw %}
-{% extends 'blank_base.html' %}
+{% extends "blank_base.html" %}
 {% load static %}
 
 {% block base_body %}
     <main class="flex-shrink-0 mb-5">
         <nav class="navbar navbar-expand-xl navbar-light bg-primary">
             <div class="container-fluid">
-                <a class="navbar-brand d-flex align-items-center" href="{% url 'index' %}">
-                    <img src="{% static 'images/placeholder.jpeg' %}" alt="" width="50" />
-                    <span class="h1" style="margin-bottom: -0.15em;">Loveall Labs Accounting</span>
+                <a class="navbar-brand d-flex align-items-center" href="{% url "index" %}">
+                    <img src="{% static "images/placeholder.jpeg" %}" alt="" width="50" height="50" />
+                    <span class="h1 mb-0">Loveall Labs Accounting</span>
                 </a>
                 <button class="navbar-toggler"
                         type="button"
@@ -36,23 +36,23 @@
                             <ul class="dropdown-menu" aria-labelledby="myAccountDropdown">
                                 {% if user.is_anonymous %}
                                     <li>
-                                        <a class="dropdown-item" href="{% url 'register' %}">
+                                        <a class="dropdown-item" href="{% url "register" %}">
                                             Register
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="{% url 'logout' %}">
+                                        <a class="dropdown-item" href="{% url "logout" %}">
                                             Sign In
                                         </a>
                                     </li>
                                 {% else %}
                                     {#                                    <li>#}
-                                    {#                                        <a class="dropdown-item" href="{% url 'my_account' %}">#}
+                                    {#                                        <a class="dropdown-item" href="{% url "my_account" %}">#}
                                     {#                                            My Account#}
                                     {#                                        </a>#}
                                     {#                                    </li>#}
                                     <li>
-                                        <a class="dropdown-item bg-danger text-light" href="{% url 'logout' %}">
+                                        <a class="dropdown-item bg-danger text-light" href="{% url "logout" %}">
                                             Sign Out
                                         </a>
                                     </li>
