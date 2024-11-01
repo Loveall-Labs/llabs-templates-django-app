@@ -13,72 +13,72 @@ on:
     workflow_dispatch:
 
 jobs:
-    pre_commit:
-        name: Verify Pre Commit Hooks Pass
-        runs-on: ubuntu-latest
-        steps:
-            -   uses: actions/checkout@v4
-            -   uses: pre-commit/action@v3.0.1
+  pre_commit:
+    name: Verify Pre Commit Hooks Pass
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v3
+    - uses: pre-commit/action@v3.0.1
+  test:
+    needs: pre_commit
+    # The type of runner that the job will run on
+    strategy:
+      matrix:
+        python-versions: ['3.9', '3.10', '3.11', '3.12', '3.13']
+        # github action doesn't goes well with windows due to docker support
+        # github action doesn't goes well with macos due to `no docker command`
+        #os: [ubuntu-20.04, windows-latest, macos-latest]
+        os: [ubuntu-20.04]
+    runs-on: ${{ matrix.os }}
+    # map step outputs to job outputs so they can be share among jobs
+    outputs:
+      package_version: ${{ steps.variables_step.outputs.package_version }}
+      package_name: ${{ steps.variables_step.outputs.package_name }}
+      repo_name: ${{ steps.variables_step.outputs.repo_name }}
+      repo_owner: ${{ steps.variables_step.outputs.repo_owner }}
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-versions }}
 
-    test:
-        needs: pre_commit
-        # The type of runner that the job will run on
-        strategy:
-            matrix:
-                python-versions: [ '3.9', '3.10', '3.11', '3.12' ]
-                # github action doesn't goes well with windows due to docker support
-                # github action doesn't goes well with macos due to `no docker command`
-                #os: [ubuntu-latest, windows-latest, macos-latest]
-                os: [ ubuntu-latest ]
-        runs-on: ${{ matrix.os }}
-        # map step outputs to job outputs so they can be share among jobs
-        outputs:
-            package_version: ${{ steps.variables_step.outputs.package_version }}
-            package_name: ${{ steps.variables_step.outputs.package_name }}
-            repo_name: ${{ steps.variables_step.outputs.repo_name }}
-            repo_owner: ${{ steps.variables_step.outputs.repo_owner }}
-            build_number: ${{ steps.variables_step.outputs.build_number }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install tox tox-gh-actions poetry
 
-        steps:
-            # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-            -   uses: actions/checkout@v4
-            -   uses: actions/setup-python@v4
-                with:
-                    python-version: ${{ matrix.python-versions }}
+      # declare package_version, repo_owner, repo_name, package_name so you may use it in web hooks.
+      - name: Declare variables for convenient use
+        id: variables_step
+        run: |
+          echo "repo_owner=${GITHUB_REPOSITORY%/*}" >> $GITHUB_OUTPUT
+          echo "repo_name=${GITHUB_REPOSITORY#*/}" >> $GITHUB_OUTPUT
+          echo "package_name=`poetry version | awk '{print $1}'`" >> $GITHUB_OUTPUT
+          echo "package_version=`poetry version --short`" >> $GITHUB_OUTPUT
+        shell: bash
 
-            -   name: Install dependencies
-                run: |
-                    python -m pip install --upgrade pip
-                    pip install tox tox-gh-actions poetry
+      - name: test with tox
+        run: tox
 
-            # declare package_version, repo_owner, repo_name, package_name so you may use it in web hooks.
-            -   name: Declare variables for convenient use
-                id: variables_step
-                run: |
-                    echo "repo_owner=${GITHUB_REPOSITORY%/*}" >> $GITHUB_OUTPUT
-                    echo "repo_name=${GITHUB_REPOSITORY#*/}" >> $GITHUB_OUTPUT
-                    echo "package_name=`poetry version | awk '{print $1}'`" >> $GITHUB_OUTPUT
-                    echo "package_version=`poetry version --short`" >> $GITHUB_OUTPUT
-                shell: bash
+  integration_test:
+      needs: pre_commit
+      permissions:
+          contents: read
+      runs-on: ubuntu-latest
+      steps:
+          # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+          -   uses: actions/checkout@v4
 
-            -   name: test with tox
-                run: tox
+          -   name: Build Container
+              run: |
+                  docker compose build app
 
-    integration_test:
-        permissions:
-            contents: read
-        runs-on: ubuntu-latest
-        steps:
-            # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-            -   uses: actions/checkout@v4
-
-            -   name: Build Container
-                run: |
-                    docker compose build app
-
-            -   name: Run Integration Tests
-                run: |
-                    docker compose run test
+          -   name: Run Integration Tests
+              run: |
+                  docker compose run test
 
     publish_dev_build:
         # if test failed, we should not publish
@@ -130,3 +130,4 @@ jobs:
                     POETRY_HTTP_BASIC_CODEARTIFACT_PASSWORD=$(aws codeartifact get-authorization-token --domain loveall-labs --domain-owner 255793234685 --region us-east-1 --query authorizationToken --output text)
                     poetry config http-basic.codeartifact $POETRY_HTTP_BASIC_CODEARTIFACT_USERNAME $POETRY_HTTP_BASIC_CODEARTIFACT_PASSWORD
                     poetry publish --no-interaction --repository codeartifact
+
