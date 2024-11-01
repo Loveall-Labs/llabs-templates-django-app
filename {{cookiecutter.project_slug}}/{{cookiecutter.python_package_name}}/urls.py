@@ -21,8 +21,4 @@ from app import views
 
 urlpatterns = [
     path("", TemplateView.as_view(template_name="index.html"), name="index"),
-    path("login/", views.CustomLoginView.as_view(), name="login"),
-    path("logout/", views.CustomLogoutView.as_view(), name="logout"),
-    path("register/", views.CustomLogoutView.as_view(), name="register"),
-    path("password_reset/", views.CustomLogoutView.as_view(), name="password_reset"),
 ]

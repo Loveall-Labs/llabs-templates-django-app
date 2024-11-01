@@ -30,9 +30,9 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.10,<4.0"
+python = ">=3.9,<4.0"
 # PUT LIBRARY-REQUIRED DEPENDENCIES HERE
-django = "~=5.1"
+django = "*"
 
 {%- if cookiecutter.command_line_interface|lower == 'fire' %}
 fire = "0.4.0"
@@ -45,6 +45,7 @@ flake8  = { version = "7.1.1", optional = true}
 flake8-docstrings = { version = "^1.7.0", optional = true }
 pytest  = { version = "^8.3.3", optional = true}
 pytest-cov  = { version = "^5.0.0", optional = true}
+pytest-django  = { version = "^4.9.0", optional = true}
 tox  = { version = "^4.20.0", optional = true}
 mkdocs  = { version = "^1.6.1", optional = true}
 mkdocs-include-markdown-plugin  = { version = "^6.2.2", optional = true}
@@ -61,11 +62,15 @@ mypy = {version = "^1.11.2", optional = true}
 setuptools = {version="^75.1.0", optional = true}
 pkginfo = {version="^1.10.0", optional = true}
 virtualenv = {version="^20.26.5", optional = true}
+example_app = {path = "example_app", develop = true, optional = true}
 
 [tool.poetry.extras]
+# TODO: These should likely be moved to optional dependency groups and re-worked
+# elsewhere. I don't think it makes sense for the end user to want to install these.
 test = [
     "pytest",
-    "pytest-cov"
+    "pytest-cov",
+    "pytest-django",
     ]
 
 dev = ["tox",
@@ -91,6 +96,9 @@ doc = [
     "pkginfo",
     "virtualenv"
     ]
+
+[tool.poetry.group.example_app.dependencies]
+example_app = {path = "example_app", develop = true}
 
 {% if cookiecutter.command_line_interface|lower == 'fire' -%}
 [tool.poetry.scripts]
@@ -129,3 +137,26 @@ exclude = '''
 [tool.isort]
 profile = "black"
 
+# ==== djLint ====
+[tool.djlint]
+blank_line_after_tag = "load,extends"
+close_void_tags = true
+format_css = true
+format_js = true
+# TODO: remove T002 when fixed https://github.com/djlint/djLint/issues/687
+ignore = "H006,H030,H031,T002,H021"
+include = "H017,H035"
+indent = 2
+max_line_length = 119
+profile = "django"
+
+[tool.djlint.css]
+indent_size = 2
+
+[tool.djlint.js]
+indent_size = 2
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "{{cookiecutter.python_package_name}}.tests.settings"
+# -- recommended but optional:
+python_files = ["test_*.py", "*_test.py", "testing/python/*.py"]
