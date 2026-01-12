@@ -118,11 +118,6 @@ def test_bake_with_defaults(cookies):
         assert "License" in result.project.join("README.md").read()
         assert "license" in result.project.join(_DEPENDENCY_FILE).read()
 
-        # Test lint rule contains google style
-        flake8_conf_file_apth = result.project.join(".flake8")
-        lines = flake8_conf_file_apth.readlines()
-        assert "docstring-convention = google" in "".join(lines)
-
         assert result.project.isdir()
         # Test pyproject does install pytest
         dep_file_path = result.project.join(_DEPENDENCY_FILE)

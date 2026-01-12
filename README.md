@@ -8,7 +8,7 @@ conform to the best practice.
 [![Dowloads](https://img.shields.io/pypi/dm/ppw)](https://pypi.org/project/ppw/)
 [![License](https://img.shields.io/pypi/l/ppw)](https://opensource.org/licenses/BSD-2-Clause)
 ![Python Versions](https://img.shields.io/pypi/pyversions/ppw)
-[![Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Style](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 
 
 ## Features
@@ -19,8 +19,7 @@ This tool will create Python project with the following features:
 * [Mkdocs]: Writting your docs in markdown style
 * Testing with [Pytest] (unittest is still supported out of the box)
 * [Tox]: Test your code against environment matrix, lint and artifact check.
-* Format with [Black] and [Isort]
-* Lint code with [Flake8] and [Flake8-docstrings]
+* Lint and format with [Ruff] (includes import sorting)
 * [Pre-commit hooks]: Formatting/linting anytime when commit/run local tox/CI
 * [Mkdocstrings]: Auto API doc generation and docstring template (vscode and its extension [autodocStrings] is required)
 * Command line interface using [Python Fire] (optional)
@@ -57,10 +56,7 @@ This repo is forked from [audreyr/cookiecutter-pypackage], and borrowed some ide
 [mkdocs]: https://www.mkdocs.org
 [pytest]: https://pytest.org
 [tox]: https://tox.readthedocs.io
-[black]: https://github.com/psf/black
-[isort]: https://github.com/PyCQA/isort
-[flake8]: https://flake8.pycqa.org
-[flake8-docstrings]: https://pypi.org/project/flake8-docstrings/
+[Ruff]: https://github.com/astral-sh/ruff
 [mkdocstrings]: https://mkdocstrings.github.io/
 [Python Fire]: https://github.com/google/python-fire
 [github actions]: https://github.com/features/actions

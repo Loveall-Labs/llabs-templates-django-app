@@ -39,10 +39,7 @@ fire = "0.4.0"
 {%- endif %}
 
 # Pin dev dep versions
-black  = { version = "^24.8.0", optional = true}
-isort  = { version = "5.13.2", optional = true}
-flake8  = { version = "7.1.1", optional = true}
-flake8-docstrings = { version = "^1.7.0", optional = true }
+ruff = { version = "^0.8.0", optional = true}
 pytest  = { version = "^8.3.3", optional = true}
 pytest-cov  = { version = "^5.0.0", optional = true}
 pytest-django  = { version = "^4.9.0", optional = true}
@@ -77,10 +74,7 @@ dev = ["tox",
     "pre-commit",
     "twine",
     "toml",
-    "black",
-    "isort",
-    "flake8",
-    "flake8-docstrings",
+    "ruff",
     "mypy"
     ]
 
@@ -116,26 +110,16 @@ priority = "supplemental"
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.black]
+[tool.ruff]
 line-length = 88
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-  | \.history
-)/
-'''
-[tool.isort]
-profile = "black"
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "C4", "UP"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["{{ cookiecutter.python_package_name }}"]
 
 # ==== djLint ====
 [tool.djlint]

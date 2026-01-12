@@ -69,7 +69,6 @@ The project layout should look like:
 │   ├── installation.md
 │   └── usage.md
 ├── .editorconfig
-├── .flake8
 ├── .github
 │   ├── ISSUE_TEMPLATE.md
 │   └── workflows
@@ -77,7 +76,6 @@ The project layout should look like:
 │       └── release.yml
 ├── .gitignore
 ├── HISTORY.md
-├── .isort.cfg
 ├── LICENSE
 ├── mkdocs.yml
 ├── poetry.lock
