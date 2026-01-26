@@ -163,3 +163,30 @@ def test_bake_with_console_script_cli(cookies):
     out = execute([sys.executable, module_path, "help"], project_dir)
 
     assert project_slug in out
+
+
+def test_bake_project_passes_precommit(cookies):
+    """Test that a freshly baked project passes all pre-commit hooks."""
+    with bake_in_temp_dir(cookies) as result:
+        assert result.exit_code == 0
+        assert result.exception is None
+
+        project_path = str(result.project)
+
+        # Initialize git repo (required for pre-commit)
+        with inside_dir(project_path):
+            subprocess.check_call(["git", "init"])
+            subprocess.check_call(["git", "add", "."])
+
+        # Install pre-commit hooks and run them
+        with inside_dir(project_path):
+            # Run pre-commit on all files
+            result = subprocess.run(
+                ["pre-commit", "run", "--all-files"],
+                capture_output=True,
+                text=True,
+            )
+            if result.returncode != 0:
+                print(f"pre-commit stdout:\n{result.stdout}")
+                print(f"pre-commit stderr:\n{result.stderr}")
+            assert result.returncode == 0, f"pre-commit failed:\n{result.stdout}\n{result.stderr}"
