@@ -10,3 +10,4 @@ python = ">=3.9,<4.0"
 # PUT app-REQUIRED DEPENDENCIES HERE
 django = "~=4.2"
 psycopg = { version = "~=3.2", extras = ["binary", "pool"] }
+django-object-actions = "*"
