@@ -1,28 +1,44 @@
 name: dev build CI
 
-# Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events
   push:
     branches:
       - '*'
   pull_request:
     branches:
       - '*'
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
-  pre_commit:
-    name: Verify Pre Commit Hooks Pass
+  # Verify that a freshly generated project passes pre-commit
+  generated_project_precommit:
+    name: Generated Project Pre-commit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
-      - uses: pre-commit/action@v3.0.1
+        with:
+          python-version: '3.12'
+
+      - name: Install cookiecutter and pre-commit
+        run: |
+          python -m pip install --upgrade pip
+          pip install cookiecutter pre-commit
+
+      - name: Generate project from template
+        run: |
+          cookiecutter . --no-input --output-dir /tmp/generated
+
+      - name: Run pre-commit on generated project
+        run: |
+          cd /tmp/generated/app-project-name
+          git init
+          git add .
+          pre-commit run --all-files
 
   test:
-    needs: pre_commit
+    needs: generated_project_precommit
     strategy:
       matrix:
         python-versions: ['3.9', '3.10', '3.11', '3.12', '3.13']
@@ -43,7 +59,7 @@ jobs:
         run: tox
 
   integration_test:
-    needs: pre_commit
+    needs: generated_project_precommit
     permissions:
       contents: read
     runs-on: ubuntu-latest
