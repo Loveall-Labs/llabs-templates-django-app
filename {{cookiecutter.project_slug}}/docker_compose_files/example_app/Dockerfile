@@ -17,10 +17,10 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Install library, example app, & dependencies
-COPY pyproject.toml poetry.lock README.md /code/
+COPY pyproject.toml README.md /code/
 COPY {{cookiecutter.python_package_name}}/* /code/{{cookiecutter.python_package_name}}/
 COPY example_app /code/example_app
-RUN poetry install --no-interaction --no-ansi --with example_app
+RUN poetry lock --no-interaction && poetry install --no-interaction --no-ansi --with example_app
 
 # Set this path to within the example app to make manage.py make sense.
 WORKDIR /code/example_app/example_app/
