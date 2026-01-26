@@ -2,43 +2,35 @@ name: dev build CI
 
 # Controls when the action will run.
 on:
-    # Triggers the workflow on push or pull request events
-    push:
-        branches:
-            - '*'
-    pull_request:
-        branches:
-            - '*'
-    # Allows you to run this workflow manually from the Actions tab
-    workflow_dispatch:
+  # Triggers the workflow on push or pull request events
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
   pre_commit:
     name: Verify Pre Commit Hooks Pass
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v3
-    - uses: pre-commit/action@v3.0.1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - uses: pre-commit/action@v3.0.1
+
   test:
     needs: pre_commit
-    # The type of runner that the job will run on
     strategy:
       matrix:
         python-versions: ['3.9', '3.10', '3.11', '3.12', '3.13']
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
-    # map step outputs to job outputs so they can be share among jobs
-    outputs:
-      package_version: ${{ steps.variables_step.outputs.package_version }}
-      package_name: ${{ steps.variables_step.outputs.package_name }}
-      repo_name: ${{ steps.variables_step.outputs.repo_name }}
-      repo_owner: ${{ steps.variables_step.outputs.repo_owner }}
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-versions }}
 
@@ -47,84 +39,21 @@ jobs:
           python -m pip install --upgrade pip
           pip install tox tox-gh-actions poetry
 
-      # declare package_version, repo_owner, repo_name, package_name so you may use it in web hooks.
-      - name: Declare variables for convenient use
-        id: variables_step
-        run: |
-          echo "repo_owner=${GITHUB_REPOSITORY%/*}" >> $GITHUB_OUTPUT
-          echo "repo_name=${GITHUB_REPOSITORY#*/}" >> $GITHUB_OUTPUT
-          echo "package_name=`poetry version | awk '{print $1}'`" >> $GITHUB_OUTPUT
-          echo "package_version=`poetry version --short`" >> $GITHUB_OUTPUT
-        shell: bash
-
       - name: test with tox
         run: tox
 
   integration_test:
-      needs: pre_commit
-      permissions:
-          contents: read
-      runs-on: ubuntu-latest
-      steps:
-          # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-          -   uses: actions/checkout@v4
+    needs: pre_commit
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-          -   name: Build Container
-              run: |
-                  docker compose build app
+      - name: Build Container
+        run: |
+          docker compose build app
 
-          -   name: Run Integration Tests
-              run: |
-                  docker compose run test
-
-    publish_dev_build:
-        # if test failed, we should not publish
-        needs: [test, integration_test]
-        permissions:
-            id-token: write
-            contents: write
-        # you may need to change os below
-        runs-on: ubuntu-latest
-        steps:
-            -   uses: actions/checkout@v4
-
-            -   uses: actions/setup-python@v4
-                with:
-                    python-version: '3.9'
-
-            -   name: Configure AWS credentials
-                uses: aws-actions/configure-aws-credentials@v1
-                with:
-                    aws-region: us-east-1
-                    role-to-assume: arn:aws:iam::255793234685:role/pip_publisher_role
-                    role-session-name: RepoPublishPackage
-                    role-duration-seconds: 900
-
-            -   name: Install dependencies
-                run: |
-                    python -m pip install --upgrade pip
-                    pip install poetry tox tox-gh-actions
-
-            -   name: build documentation
-                run: |
-                    poetry install -E doc
-                    poetry run mkdocs build
-                    git config --global user.name Docs deploy
-                    git config --global user.email docs@dummy.bot.com
-                    poetry run mike deploy --ignore "`poetry version --short`.dev"
-                    poetry run mike set-default "`poetry version --short`.dev"
-
-            -   name: Build wheels and source tarball
-                run: |
-                    poetry version $(poetry version --short)-dev.$GITHUB_RUN_NUMBER
-                    poetry lock
-                    poetry build
-
-            -   name: publish to Private PyPi
-                run: |
-                    POETRY_REPOSITORIES_CODEARTIFACT_URL=$(aws codeartifact get-repository-endpoint --domain-owner 255793234685 --domain loveall-labs --repository primary --format pypi --query 'repositoryEndpoint' --output text)
-                    POETRY_HTTP_BASIC_CODEARTIFACT_USERNAME=aws
-                    POETRY_HTTP_BASIC_CODEARTIFACT_PASSWORD=$(aws codeartifact get-authorization-token --domain loveall-labs --domain-owner 255793234685 --region us-east-1 --query authorizationToken --output text)
-                    poetry config http-basic.codeartifact $POETRY_HTTP_BASIC_CODEARTIFACT_USERNAME $POETRY_HTTP_BASIC_CODEARTIFACT_PASSWORD
-                    poetry publish --no-interaction --repository codeartifact
-
+      - name: Run Integration Tests
+        run: |
+          docker compose run test
