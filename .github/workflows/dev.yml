@@ -10,7 +10,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  # Verify that a freshly generated project passes pre-commit
   generated_project_precommit:
     name: Generated Project Pre-commit
     runs-on: ubuntu-latest
@@ -46,6 +45,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-versions }}
@@ -53,10 +53,16 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install tox tox-gh-actions poetry
+          pip install cookiecutter colorama tox tox-gh-actions poetry
 
-      - name: test with tox
-        run: tox
+      - name: Generate project from template
+        run: |
+          cookiecutter . --no-input project_name="Testapp" --output-dir /tmp/generated
+
+      - name: Run tox on generated project
+        run: |
+          cd /tmp/generated/testapp
+          tox
 
   integration_test:
     needs: generated_project_precommit
@@ -66,10 +72,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install cookiecutter
+        run: |
+          python -m pip install --upgrade pip
+          pip install cookiecutter colorama
+
+      - name: Generate project from template
+        run: |
+          cookiecutter . --no-input project_name="Testapp" --output-dir /tmp/generated
+
       - name: Build Container
         run: |
+          cd /tmp/generated/testapp
           docker compose build app
 
       - name: Run Integration Tests
         run: |
+          cd /tmp/generated/testapp
           docker compose run test
