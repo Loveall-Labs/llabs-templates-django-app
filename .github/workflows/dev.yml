@@ -24,7 +24,7 @@ jobs:
       - name: Install cookiecutter and pre-commit
         run: |
           python -m pip install --upgrade pip
-          pip install cookiecutter pre-commit
+          pip install cookiecutter pre-commit colorama
 
       - name: Generate project from template
         run: |
