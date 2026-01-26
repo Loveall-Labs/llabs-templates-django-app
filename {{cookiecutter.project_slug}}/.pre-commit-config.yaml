@@ -1,4 +1,4 @@
-exclude: '^docs/|/migrations/|devcontainer.json|.idea/''
+exclude: '^docs/|/migrations/|devcontainer.json|.idea/'
 default_stages: [commit]
 
 default_language_version:
