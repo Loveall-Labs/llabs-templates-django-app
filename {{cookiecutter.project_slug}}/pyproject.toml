@@ -141,6 +141,6 @@ indent_size = 2
 indent_size = 2
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "{{cookiecutter.python_package_name}}.tests.settings"
+DJANGO_SETTINGS_MODULE = "config.settings"
 # -- recommended but optional:
 python_files = ["test_*.py", "*_test.py", "testing/python/*.py"]
