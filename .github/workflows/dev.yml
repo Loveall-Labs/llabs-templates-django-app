@@ -28,11 +28,11 @@ jobs:
 
       - name: Generate project from template
         run: |
-          cookiecutter . --no-input --output-dir /tmp/generated
+          cookiecutter . --no-input project_name="Testapp" --output-dir /tmp/generated
 
       - name: Run pre-commit on generated project
         run: |
-          cd /tmp/generated/app-project-name
+          cd /tmp/generated/testapp
           git init
           git add .
           pre-commit run --all-files
