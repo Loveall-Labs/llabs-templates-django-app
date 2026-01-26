@@ -11,3 +11,4 @@ python = ">=3.9,<4.0"
 django = "~=4.2"
 psycopg = { version = "~=3.2", extras = ["binary", "pool"] }
 django-object-actions = "*"
+django-widget-tweaks = "*"
